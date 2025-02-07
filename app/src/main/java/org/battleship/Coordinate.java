@@ -9,6 +9,9 @@ public class Coordinate {
         return column;
     }
     public Coordinate(int row, int column) {
+        if (row < 0 || row > 10 || column < 0 || column > 26) {
+            throw new IllegalArgumentException("Invalid coordinate");
+        }
         this.row = row;
         this.column = column;
     }
@@ -17,7 +20,7 @@ public class Coordinate {
             throw new IllegalArgumentException("Invalid description length");
         }
 
-        char rowLetter = descr.charAt(0);
+        char rowLetter = Character.toUpperCase(descr.charAt(0));
         char columnLetter = descr.charAt(1);
         if (rowLetter < 'A' || rowLetter > 'Z') {
             throw new IllegalArgumentException("Invalid row coordinate: " + rowLetter);
