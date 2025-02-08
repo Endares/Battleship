@@ -28,5 +28,29 @@ public class App {
             return new Placement(s);
       }
 
+      /**
+       *   - read a Placement (prompt: "Where would you like to put your ship?")
+       *   - Create a basic ship based on the location in that Placement
+       *     (orientation doesn't matter yet)
+       *   - Add that ship to the board
+       *   - Print out the board (to out, not to System.out)
+       * @throws IOException
+       */
+      public void doOnePlacement() throws IOException {
+            Placement currentPlacement = readPlacement("Where would you like to put your ship?");
+            BasicShip bs = new BasicShip(currentPlacement.getWhere());
+            theBoard.tryAddShip(bs);
+            out.println(view.displayMyOwnBoard());
+      }
+
+      public static void main(String[] args) throws IOException {
+            Board<Character> board = new BattleShipBoard<>(10, 20);
+            App app = new App(board, new BufferedReader(new InputStreamReader(System.in)), System.out);
+            // (*) Readers provide characters and Streams provide bytes.  Generally when
+            //    working with text, you want a Reader.  You can always wrap an InputStream
+            //    in an InputStreamReader to do the conversion.
+            app.doOnePlacement();
+      }
+
 
 }

@@ -4,12 +4,13 @@
 package org.battleship;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.*;
 
 class AppTest {
     @Test
@@ -37,5 +38,73 @@ class AppTest {
             assertEquals(prompt + "\n", bytes.toString()); //should have printed prompt and newline
             bytes.reset(); //clear out bytes for next time around
         }
+    }
+
+    @Test
+    public void test_doOnePlacement() throws IOException {
+        // Step 1: Simulate user input for placement (e.g., "A1V")
+        StringReader sr = new StringReader("A0V\n");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(bytes, true);
+
+        // Step 2: Create board and App instance
+        Board<Character> b = new BattleShipBoard<>(3, 3);
+        App app = new App(b, sr, ps);
+
+        // Step 3: Run `doOnePlacement()`
+        app.doOnePlacement();
+
+        // Step 4: Expected output after placing the ship
+        String expectedOutput =
+                "  0|1|2\n" +
+                        "A s| |  A\n" +
+                        "B  | |  B\n" +
+                        "C  | |  C\n" +
+                        "  0|1|2\n";
+        String prompt = "Where would you like to put your ship?\n";
+        // Step 5: Verify board output
+        assertEquals((prompt + expectedOutput).trim(), bytes.toString().trim());
+    }
+
+    @Test
+    @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
+    // Ensures that System.out is not modified by other tests while this test runs.
+    void test_main() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(bytes, true);
+
+        // get an InputStream for our input.txt file
+        // getClass().getClassLoader() is Java's ClassLoader,
+        // responsible for loading classes and resource files (e.g., output.txt) at runtime.
+        InputStream input = getClass().getClassLoader().getResourceAsStream("input.txt");
+        assertNotNull(input);
+
+        // get an InputStream for output.txt
+        InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
+        assertNotNull(expectedStream);
+
+        // remember the current System.in and System.out:
+        InputStream oldIn = System.in;
+        PrintStream oldOut = System.out;
+
+        // change to our new input (from "input.txt") and output (our PrintStream that writes
+        // into bytes), and run our App.main.  We'll do this inside a try...finally to ensure
+        // we restore System.in and System.out:
+        try {
+            System.setIn(input);
+            System.setOut(out);
+            App.main(new String[0]);
+            // Notice that we pass new String[0] to main---we don't need any arguments, so we'll just pass
+            // a 0 element String[] (which is legal in Java).
+        }
+        finally {
+            System.setIn(oldIn);
+            System.setOut(oldOut);
+        }
+
+        // read all the data from our expectedStream (output.txt):
+        String expected = new String(expectedStream.readAllBytes());
+        String actual = bytes.toString();
+        assertEquals(expected, actual);
     }
 }

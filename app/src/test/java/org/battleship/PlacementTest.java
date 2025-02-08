@@ -40,7 +40,6 @@ class PlacementTest {
     public void testInvalidStringPlacement() {
         assertThrows(IllegalArgumentException.class, () -> new Placement("C3X"));
         assertThrows(IllegalArgumentException.class, () -> new Placement("C33"));
-        assertThrows(IllegalArgumentException.class, () -> new Placement("X3H"));
         assertThrows(IllegalArgumentException.class, () -> new Placement("C#H"));
         assertThrows(IllegalArgumentException.class, () -> new Placement("A2V3"));
         assertThrows(IllegalArgumentException.class, () -> new Placement("#2V"));

@@ -9,7 +9,7 @@ public class Coordinate {
         return column;
     }
     public Coordinate(int row, int column) {
-        if (row < 0 || row > 10 || column < 0 || column > 26) {
+        if (row < 0 || row > 26 || column < 0 || column > 10) {
             throw new IllegalArgumentException("Invalid coordinate");
         }
         this.row = row;

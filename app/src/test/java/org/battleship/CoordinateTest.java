@@ -36,8 +36,8 @@ class CoordinateTest {
     }
     @Test
     public void test_constructor_error_cases() {
-        assertThrows(IllegalArgumentException.class, () -> new Coordinate(11, 5));
-        assertThrows(IllegalArgumentException.class, () -> new Coordinate(4,27));
+        assertThrows(IllegalArgumentException.class, () -> new Coordinate(27, 5));
+        assertThrows(IllegalArgumentException.class, () -> new Coordinate(4,11));
         assertThrows(IllegalArgumentException.class, () -> new Coordinate(-1, 5));
         assertThrows(IllegalArgumentException.class, () -> new Coordinate(4, -5));
     }
