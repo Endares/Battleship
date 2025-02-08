@@ -1,5 +1,9 @@
 package org.battleship;
 
+/**
+ * Place a Ship onto Board at coordinate where
+ * direction: orientation V / H
+ */
 public class Placement {
     private final Coordinate where;
     private final char orientation;
