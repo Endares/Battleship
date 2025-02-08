@@ -34,7 +34,7 @@ class BoardTextViewTest {
     }
 
     private void emptyBoardHelper(int w, int h, String expectedHeader, String expectedBody){
-        Board b1 = new BattleShipBoard(w, h);
+        Board<Character> b1 = new BattleShipBoard<Character>(w, h);
         BoardTextView view = new BoardTextView(b1);
         assertEquals(expectedHeader, view.makeHeader());
         String expected = expectedHeader + expectedBody + expectedHeader;
@@ -43,8 +43,8 @@ class BoardTextViewTest {
 
     @Test
     public void test_invalid_board_size() {
-        Board wideBoard = new BattleShipBoard(11,20);
-        Board tallBoard = new BattleShipBoard(10,27);
+        Board<Character> wideBoard = new BattleShipBoard<Character>(11,20);
+        Board<Character> tallBoard = new BattleShipBoard<Character>(10,27);
         //you should write two assertThrows here
         assertThrows(IllegalArgumentException.class, () -> new BoardTextView(wideBoard));
         assertThrows(IllegalArgumentException.class, () -> new BoardTextView(tallBoard));
