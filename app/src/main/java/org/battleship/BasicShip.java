@@ -1,16 +1,44 @@
 package org.battleship;
 
+import java.util.HashMap;
+
 /**
  * Basic Ship is a kind of Ship that is implemented by Characters
  */
-public class BasicShip implements Ship<Character> {
-    private final Coordinate myLocation;
-    public BasicShip(Coordinate location) {
-        myLocation = location;
+public class BasicShip<T> implements Ship<T> {
+    //private final Coordinate myLocation;
+    protected HashMap<Coordinate, Boolean> myPieces;
+    protected ShipDisplayInfo<T> myDisplayInfo;
+    /**
+     * Track if the piece at a coordinate has been hit
+     * if we have a coordinate c, and we look it up in the map:
+     *    if myPieces.get(c)  is null, c is not part of this Ship
+     *    if myPieces.get(c)  is false, c is part of this ship and has not been hit
+     *    if myPieces.get(c)  is true, c is part of this ship and has been hit
+     */
+
+
+    /**
+     * initialize myPieces to have each Coordinate in where mapped to false.
+     * @param where
+     */
+    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+        myPieces = new HashMap<Coordinate, Boolean>();
+        for (Coordinate c : where) {
+            myPieces.put(c, false);
+        }
+        this.myDisplayInfo = myDisplayInfo;
     }
+
+    /**
+     * Check if this ship occupies the given coordinate.
+     *
+     * @param where is the Coordinate to check if this Ship occupies
+     * @return true if where is inside this ship, false if not.
+     */
     @Override
     public boolean occupiesCoordinates(Coordinate where) {
-        return where.equals(myLocation);
+        return myPieces.containsKey(where);
     }
 
     @Override
@@ -29,7 +57,9 @@ public class BasicShip implements Ship<Character> {
     }
 
     @Override
-    public Character getDisplayInfoAt(Coordinate where) {
-        return 's';
+    public T getDisplayInfoAt(Coordinate where) {
+        //TODO this is not right.  We need to
+        //look up the hit status of this coordinate
+        return myDisplayInfo.getInfo(where, false);
     }
 }

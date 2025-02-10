@@ -28,7 +28,7 @@ class BattleShipBoardTest {
         };
         checkWhatIsAtBoard(board, expected);
 
-        Ship<Character> ship =  new BasicShip(new Coordinate(1, 1));
+        Ship<Character> ship =  new RectangleShip<>(new Coordinate(1, 1), 's', '*');
         board.tryAddShip(ship);
 
         expected[1][1] = 's';

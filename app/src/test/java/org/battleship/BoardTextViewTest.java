@@ -46,7 +46,7 @@ class BoardTextViewTest {
         Board<Character> b1 = new BattleShipBoard<Character>(3, 3);
         BoardTextView view = new BoardTextView(b1);
 
-        b1.tryAddShip(new BasicShip(new Coordinate(1, 1)));
+        b1.tryAddShip(new RectangleShip<>(new Coordinate(1, 1), 's', '*'));
         String expectedHeader = "  0|1|2\n";
         String expectedBody =
                         "A  | |  A\n" +
