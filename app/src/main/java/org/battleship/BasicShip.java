@@ -43,23 +43,42 @@ public class BasicShip<T> implements Ship<T> {
 
     @Override
     public boolean isSunk() {
-        return false;
+        for (Coordinate c : myPieces.keySet()) {
+            if (myPieces.get(c) == false) {
+                return false;
+            }
+        }
+        return true; // all pieces are hit
     }
 
     @Override
     public void recordHitAt(Coordinate where) {
-
+        checkCoordinateInThisShip(where);
+        myPieces.put(where, true);
     }
 
     @Override
     public boolean wasHitAt(Coordinate where) {
-        return false;
+        checkCoordinateInThisShip(where);
+        return myPieces.get(where);
     }
 
     @Override
     public T getDisplayInfoAt(Coordinate where) {
+        checkCoordinateInThisShip(where);
         //TODO this is not right.  We need to
         //look up the hit status of this coordinate
-        return myDisplayInfo.getInfo(where, false);
+        return myDisplayInfo.getInfo(where, myPieces.get(where));
+    }
+
+    /**
+     * check if c is part of this ship (in myPieces),
+     * and if not, throw an IllegalArgumentException.
+     * @param c
+     */
+    protected void checkCoordinateInThisShip(Coordinate c) {
+        if (!myPieces.containsKey(c)) {
+            throw new IllegalArgumentException("Coordinate " + c + " is not present in this ship");
+        }
     }
 }
