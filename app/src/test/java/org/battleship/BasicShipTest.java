@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BasicShipTest {
     @Test
     void testRecordHitAtAndWasHitAt() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 1), 2, 2, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 1), 2, 2, 's', '*');
 
         // Initially, no coordinates are hit
         assertFalse(ship.wasHitAt(new Coordinate(1, 1)));
@@ -27,7 +27,7 @@ class BasicShipTest {
 
     @Test
     void testIsSunk() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(2, 2), 2, 2, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(2, 2), 2, 2, 's', '*');
 
         // Initially, ship is not sunk
         assertFalse(ship.isSunk());
@@ -45,7 +45,7 @@ class BasicShipTest {
 
     @Test
     void testGetDisplayInfoAt() {
-        RectangleShip<Character> ship = new RectangleShip<>(new Coordinate(1, 1), 2, 2, 's', '*');
+        RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 1), 2, 2, 's', '*');
 
         // Initially, all coordinates should display 's'
         assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 1)));

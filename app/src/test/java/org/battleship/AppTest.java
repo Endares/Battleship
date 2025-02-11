@@ -57,9 +57,9 @@ class AppTest {
         // Step 4: Expected output after placing the ship
         String expectedOutput =
                 "  0|1|2\n" +
-                        "A s| |  A\n" +
-                        "B  | |  B\n" +
-                        "C  | |  C\n" +
+                        "A d| |  A\n" +
+                        "B d| |  B\n" +
+                        "C d| |  C\n" +
                         "  0|1|2\n";
         String prompt = "Where would you like to put your ship?\n";
         // Step 5: Verify board output

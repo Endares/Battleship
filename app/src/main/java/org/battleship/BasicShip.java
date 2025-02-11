@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  * Basic Ship is a kind of Ship that is implemented by Characters
  */
-public class BasicShip<T> implements Ship<T> {
+public abstract class BasicShip<T> implements Ship<T> {
     //private final Coordinate myLocation;
     protected HashMap<Coordinate, Boolean> myPieces;
     protected ShipDisplayInfo<T> myDisplayInfo;
@@ -16,7 +16,6 @@ public class BasicShip<T> implements Ship<T> {
      *    if myPieces.get(c)  is false, c is part of this ship and has not been hit
      *    if myPieces.get(c)  is true, c is part of this ship and has been hit
      */
-
 
     /**
      * initialize myPieces to have each Coordinate in where mapped to false.

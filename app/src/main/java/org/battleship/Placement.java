@@ -19,9 +19,7 @@ public class Placement {
     public Coordinate getWhere() {
         return where;
     }
-    public char getOrientation() {
-        return orientation;
-    }
+    public char getOrientation() { return orientation; }
     public Placement(String str) {
         if (str.length() != 3) {
             throw new IllegalArgumentException("Invalid length of placement string");

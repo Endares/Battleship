@@ -9,9 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RectangleShipTest {
     @Test
+    void testGetName() {
+        RectangleShip<Character> rs = new RectangleShip<>("testship", new Coordinate(1, 2), 2, 3, 's', '*');
+        assertTrue(rs.getName().equals("testship"));
+    }
+    @Test
     void testOccupyCoordinates() {
-        RectangleShip<Character> rs = new RectangleShip<>(new Coordinate(1, 2), 2, 3, 's', '*');
-        assertTrue(rs.occupiesCoordinates(new Coordinate(1, 4)));
+        RectangleShip<Character> rs = new RectangleShip<>("testship", new Coordinate(1, 2), 2, 3, 's', '*');
+        assertTrue(rs.occupiesCoordinates(new Coordinate(1, 3)));
         assertFalse(rs.occupiesCoordinates(new Coordinate(1, 6)));
     }
 
@@ -25,12 +30,12 @@ class RectangleShipTest {
 
         checkMakeCoords(
                 new Coordinate(0, 0), 1, 3,
-                Set.of(new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(0, 2))
+                Set.of(new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0))
         );
 
         checkMakeCoords(
                 new Coordinate(2, 3), 3, 1,
-                Set.of(new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(4, 3))
+                Set.of(new Coordinate(2, 3), new Coordinate(2, 4), new Coordinate(2, 5))
         );
 
         checkMakeCoords(
