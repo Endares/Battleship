@@ -2,6 +2,8 @@ package org.battleship;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasicShipTest {
@@ -60,5 +62,13 @@ class BasicShipTest {
 
         // Ensure checking an invalid coordinate throws an exception
         assertThrows(IllegalArgumentException.class, () -> ship.getDisplayInfoAt(new Coordinate(3, 3)));
+    }
+
+    @Test
+    void testGetCoordinate() {
+        RectangleShip<Character> ship = new RectangleShip<>("testship", new Coordinate(1, 1), 2, 2, 's', '*');
+        Iterable<Coordinate> coords = ship.getCoordinates();
+        assertEquals(coords, Set.of(new Coordinate(1, 1), new Coordinate(1, 2), new Coordinate(2, 1), new Coordinate(2, 2)));
+
     }
 }

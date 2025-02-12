@@ -80,4 +80,9 @@ public abstract class BasicShip<T> implements Ship<T> {
             throw new IllegalArgumentException("Coordinate " + c + " is not present in this ship");
         }
     }
+
+    @Override
+    public Iterable<Coordinate> getCoordinates() {
+        return myPieces.keySet();
+    }
 }
