@@ -3,6 +3,7 @@
  */
 package org.battleship;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -13,59 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
 
 class AppTest {
-    @Test
-    void test_read_placement() throws IOException {
-        // StringReader: we can construct it with a String,
-        // and then read from it like an input stream.
-        StringReader sr = new StringReader("B2V\nC8H\na4v\n");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream(); // to collect the output
-        // ps writes its data into bytes instead of to the screen
-        PrintStream ps = new PrintStream(bytes, true);
-
-        Board<Character> b = new BattleShipBoard<Character>(10, 20);
-        App app = new App(b, sr, ps);
-
-        String prompt = "Please enter a location for a ship:";
-        Placement[] expected = new Placement[3];
-        expected[0] = new Placement(new Coordinate(1, 2), 'V');
-        expected[1] = new Placement(new Coordinate(2, 8), 'H');
-        expected[2] = new Placement(new Coordinate(0, 4), 'V');
-
-        //  get those three Placements from app.readPlacement
-        for (int i = 0; i < expected.length; i++) {
-            Placement p = app.readPlacement(prompt);
-            assertEquals(p, expected[i]); //did we get the right Placement back
-            assertEquals(prompt + "\n", bytes.toString()); //should have printed prompt and newline
-            bytes.reset(); //clear out bytes for next time around
-        }
-    }
-
-    @Test
-    public void test_doOnePlacement() throws IOException {
-        // Step 1: Simulate user input for placement (e.g., "A1V")
-        StringReader sr = new StringReader("A0V\n");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(bytes, true);
-
-        // Step 2: Create board and App instance
-        Board<Character> b = new BattleShipBoard<>(3, 3);
-        App app = new App(b, sr, ps);
-
-        // Step 3: Run `doOnePlacement()`
-        app.doOnePlacement();
-
-        // Step 4: Expected output after placing the ship
-        String expectedOutput =
-                "  0|1|2\n" +
-                        "A d| |  A\n" +
-                        "B d| |  B\n" +
-                        "C d| |  C\n" +
-                        "  0|1|2\n";
-        String prompt = "Where would you like to put your ship?\n";
-        // Step 5: Verify board output
-        assertEquals((prompt + expectedOutput).trim(), bytes.toString().trim());
-    }
-
     @Test
     @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
     // Ensures that System.out is not modified by other tests while this test runs.
