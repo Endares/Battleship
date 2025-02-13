@@ -8,13 +8,22 @@ public class Coordinate {
     public int getColumn() {
         return column;
     }
+
+    /**
+     * This constructor will not test the legalness of row and column,
+     * so wemay have row = -1 here.
+     * @param row
+     * @param column
+     */
     public Coordinate(int row, int column) {
-        if (row < 0 || row > 26 || column < 0 || column > 10) {
-            throw new IllegalArgumentException("Invalid coordinate");
-        }
         this.row = row;
         this.column = column;
     }
+
+    /**
+     * This constructor will test the legalness of the String to convert it into coordinate
+     * @param descr
+     */
     public Coordinate(String descr) {
         if (descr.length() != 2) {
             throw new IllegalArgumentException("Invalid description length");

@@ -47,25 +47,6 @@ public class BoardTextView {
         return result.toString();
     }
 
-    /**
-     * This makes the columns, e.g. A  | | | | | | | | |  A\n
-     *
-     * @return the String that is the columns for the given empty board
-     */
-//    String makeColumns () {
-//        StringBuilder ans = new StringBuilder();
-//        for (int i = 0; i < toDisplay.getHeight(); i++) {
-//            String sep = " ";
-//            char letter = (char) ('A' + i);
-//            ans.append(letter).append(" ");
-//            for (int j = 0; j < toDisplay.getWidth(); j++) {
-//                ans.append(sep);
-//                sep = "| ";
-//            }
-//            ans.append(" ").append(letter).append('\n');
-//        }
-//        return ans.toString();
-//    }
 
     /**
      * This makes the header line, e.g. 0|1|2|3|4\n

@@ -1,9 +1,6 @@
 package org.battleship;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +50,9 @@ public class TextPlayer {
         // somewhere else, especially for testing.   When we want System.out, we'll pass it into
         // the constructor.
         String s = inputReader.readLine();
+        if (s == null) {
+            throw new EOFException("End of input reached. Exiting the game.");
+        }
         return new Placement(s);
     }
 
@@ -120,5 +120,4 @@ public class TextPlayer {
             doOnePlacement(s, shipCreationFns.get(s));
         }
     }
-
 }

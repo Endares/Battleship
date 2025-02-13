@@ -27,15 +27,20 @@ public class Placement {
         char rowLetter = Character.toUpperCase(str.charAt(0));
         char columnLetter = str.charAt(1);
         char orientLetter = Character.toUpperCase(str.charAt(2));
-        if (rowLetter < 'A' || rowLetter > 'Z') {
-            throw new IllegalArgumentException("Invalid row coordinate: " + rowLetter);
+        if (rowLetter < 'A' || rowLetter > 'Z'
+                || columnLetter < '0' || columnLetter > '9'
+                || orientLetter != 'V' && orientLetter != 'H') {
+            throw new IllegalArgumentException("That placement is invalid: it does not have the correct format.");
         }
-        if (columnLetter < '0' || columnLetter > '9') {
-            throw new IllegalArgumentException("Invalid column coordinate: " + columnLetter);
-        }
-        if (orientLetter != 'V' && orientLetter != 'H') {
-            throw new IllegalArgumentException("Invalid orientation letter: " + orientLetter);
-        }
+//        if (rowLetter < 'A' || rowLetter > 'Z') {
+//            throw new IllegalArgumentException("Invalid row coordinate: " + rowLetter);
+//        }
+//        if (columnLetter < '0' || columnLetter > '9') {
+//            throw new IllegalArgumentException("Invalid column coordinate: " + columnLetter);
+//        }
+//        if (orientLetter != 'V' && orientLetter != 'H') {
+//            throw new IllegalArgumentException("Invalid orientation letter: " + orientLetter);
+//        }
         this.where = new Coordinate(rowLetter - 'A', columnLetter - '0');
         this.orientation = orientLetter;
     }

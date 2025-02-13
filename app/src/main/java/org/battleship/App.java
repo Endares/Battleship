@@ -12,14 +12,6 @@ public class App {
             this.player1 = player1;
             this.player2 = player2;
       }
-//      public App(Board<Character> theBoard, Reader inputSource, PrintStream out) {
-//            this.theBoard = theBoard;
-//            this.view = new BoardTextView(theBoard);
-//            this.inputReader = new BufferedReader(inputSource);
-//            this.out = out;
-//            this.shipFactory = new V1ShipFactory();
-//      }
-
 
       public static void main(String[] args) throws IOException {
             Board<Character> b1 = new BattleShipBoard<Character>(10, 20);

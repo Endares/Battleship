@@ -50,4 +50,23 @@ class BattleShipBoardTest {
             }
         }
     }
+    @Test
+    public void test_tryAddShip_fails() {
+        BattleShipBoard<Character> board = new BattleShipBoard<>(5, 5);
+        Ship<Character> ship1 = new RectangleShip<>(new Coordinate(2, 2), 'D', '*');
+
+        // First placement should succeed
+        assertTrue(board.tryAddShip(ship1), "Ship should be placed successfully.");
+
+        Ship<Character> ship2 = new RectangleShip<>(new Coordinate(2, 2), 'S', '*');
+
+        // Second placement at same position should fail (collision)
+        assertFalse(board.tryAddShip(ship2), "Ship placement should fail due to collision.");
+
+        Ship<Character> ship3 = new RectangleShip<>(new Coordinate(4, 4), 'B', '*');
+
+        // Trying to place a ship partially outside the board
+        Ship<Character> ship4 = new RectangleShip<>(new Coordinate(4, 5), 'C', '*');
+        assertFalse(board.tryAddShip(ship4), "Ship should not be placed because it exceeds board limits.");
+    }
 }

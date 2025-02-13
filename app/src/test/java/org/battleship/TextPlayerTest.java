@@ -111,4 +111,16 @@ class TextPlayerTest {
 //        assertEquals(expectedOutput.trim(), bytes.toString().trim());
 //    }
 
+    @Test
+    void test_readPlacement_EOF() throws IOException {
+        // Simulate an empty input (EOF scenario)
+        BufferedReader emptyInput = new BufferedReader(new StringReader(""));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        Board<Character> board = new BattleShipBoard<>(5, 5);
+        V1ShipFactory shipFactory = new V1ShipFactory();
+        TextPlayer player = new TextPlayer("Player1", board, emptyInput, out, shipFactory);
+
+        // Expect an EOFException when input is exhausted
+        assertThrows(EOFException.class, () -> player.readPlacement("Enter ship placement:"));
+    }
 }

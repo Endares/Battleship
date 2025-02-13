@@ -7,21 +7,27 @@ package org.battleship;
 public abstract class PlacementRuleChecker<T> {
     private final PlacementRuleChecker<T> next;
     // Subclasses will override this method to specify how they check their own rule.
-    protected abstract boolean checkMyRule(Ship<T> theShip, Board<T> theBoard);
+    protected abstract String checkMyRule(Ship<T> theShip, Board<T> theBoard);
 
     public PlacementRuleChecker(PlacementRuleChecker<T> next) {
         this.next = next;
     }
-    public boolean checkPlacement (Ship<T> theShip, Board<T> theBoard) {
+
+    /**
+     * returns a error message if error occurs;
+     * else returns null
+     * @param theShip
+     * @param theBoard
+     * @return
+     */
+    public String checkPlacement (Ship<T> theShip, Board<T> theBoard) {
+        String res = checkMyRule(theShip, theBoard);
         //if we fail our own rule: stop the placement is not legal
-        if (!checkMyRule(theShip, theBoard)) {
-            return false;
+        if (res != null) {
+            return res;
         }
         //otherwise, ask the rest of the chain.
-        if (next != null) {
-            return next.checkPlacement(theShip, theBoard);
-        }
+        return (next == null) ? null : next.checkPlacement(theShip, theBoard);
         //if there are no more rules, then the placement is legal
-        return true;
     }
 }
