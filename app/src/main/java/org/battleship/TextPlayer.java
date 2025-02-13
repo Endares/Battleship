@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.function.Function;
 
 public class TextPlayer {
     /**
@@ -18,6 +22,12 @@ public class TextPlayer {
     final AbstractShipFactory<Character> shipFactory;
     private String name;
 
+    // an ArrayList of ships' names
+    final ArrayList<String> shipsToPlace;
+    // a map from ship name to the lambda to create it
+    final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
+
+
     public TextPlayer(String name, Board<Character> theBoard, BufferedReader inputReader, PrintStream out, AbstractShipFactory<Character> shipFactory) {
         this.theBoard = theBoard;
         this.view = new BoardTextView(theBoard);
@@ -25,6 +35,12 @@ public class TextPlayer {
         this.out = out;
         this.name = name;
         this.shipFactory = new V1ShipFactory();
+        this.shipsToPlace = new ArrayList<>();
+        this.shipCreationFns = new HashMap<>();
+
+        // Initialize ship creation mappings and ship order
+        setupShipCreationMap();
+        setupShipCreationList();
     }
     // Reader reads one character at a time, leading to frequent I/O operations (slow).
     // BufferedReader stores multiple characters in a buffer,
@@ -41,19 +57,43 @@ public class TextPlayer {
     }
 
     /**
+     * put all possible(all valid kinds of ships)
+     * String -> lambda mappings into shipCreationFns
+     */
+    protected void setupShipCreationMap() {
+        shipCreationFns.put("Submarine", shipFactory::makeSubmarine);
+        shipCreationFns.put("Destroyer", shipFactory::makeDestroyer);
+        shipCreationFns.put("Battleship", shipFactory::makeBattleship);
+        shipCreationFns.put("Carrier", shipFactory::makeCarrier);
+    }
+
+    /**
+     * we'll put in the ships we want to add, in the order we want to add them.
+     * If there are multiple copies, we'll include the item for specific number of times
+     */
+    protected void setupShipCreationList() {
+        // Collections.nCopies(int n, T o) is a static method in Java's Collections class.
+        // It creates an immutable list containing n copies of the specified object o.
+        shipsToPlace.addAll(Collections.nCopies(2, "Submarine"));
+        shipsToPlace.addAll(Collections.nCopies(3, "Destroyer"));
+        shipsToPlace.addAll(Collections.nCopies(3, "Battleship"));
+        shipsToPlace.addAll(Collections.nCopies(2, "Carrier"));
+    }
+
+    /**
      *   - read a Placement (prompt: "Where would you like to put your ship?")
      *   - Create a basic ship based on the location in that Placement
      *     (orientation doesn't matter yet)
      *   - Add that ship to the board
      *   - Print out the board (to out, not to System.out)
+     *   - Function<Placement, Ship<Character>> is an object an apply method that takes a Placement and returns a Ship<Character>
      * @throws IOException
      */
-    public void doOnePlacement() throws IOException {
-        Placement p = readPlacement("Player " + this.name + " where do you want to place a Destroyer?");
-        Ship<Character> s  = shipFactory.makeDestroyer(p);
-        // RectangleShip<Character> ship = new RectangleShip<>(currentPlacement.getWhere(), 's', '*'); // ✅ Corrected
+    public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
+        Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+        Ship<Character> s = createFn.apply(p);
         theBoard.tryAddShip(s);
-        out.println(view.displayMyOwnBoard());
+        out.print(view.displayMyOwnBoard());
     }
 
     /**
@@ -76,7 +116,9 @@ public class TextPlayer {
                 "3 \"Battleships\" that are 1x4\n" +
                 "2 \"Carriers\" that are 1x6\n");
 
-        doOnePlacement();
+        for (String s : shipsToPlace) {
+            doOnePlacement(s, shipCreationFns.get(s));
+        }
     }
 
 }
