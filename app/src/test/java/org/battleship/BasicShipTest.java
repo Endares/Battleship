@@ -50,18 +50,18 @@ class BasicShipTest {
         RectangleShip<Character> ship = new RectangleShip<>("submarine", new Coordinate(1, 1), 2, 2, 's', '*');
 
         // Initially, all coordinates should display 's'
-        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 1)));
-        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2)));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 1), true));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(2, 2), true));
 
         // Hit a coordinate and check if display updates
         ship.recordHitAt(new Coordinate(1, 1));
-        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 1))); // Should display '*'
+        assertEquals('*', ship.getDisplayInfoAt(new Coordinate(1, 1), true)); // Should display '*'
 
         // Unhit coordinates should still show 's'
-        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 2)));
+        assertEquals('s', ship.getDisplayInfoAt(new Coordinate(1, 2), true));
 
         // Ensure checking an invalid coordinate throws an exception
-        assertThrows(IllegalArgumentException.class, () -> ship.getDisplayInfoAt(new Coordinate(3, 3)));
+        assertThrows(IllegalArgumentException.class, () -> ship.getDisplayInfoAt(new Coordinate(3, 3), true));
     }
 
     @Test

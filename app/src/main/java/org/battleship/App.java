@@ -14,8 +14,8 @@ public class App {
       }
 
       public static void main(String[] args) throws IOException {
-            Board<Character> b1 = new BattleShipBoard<Character>(10, 20);
-            Board<Character> b2 = new BattleShipBoard<Character>(10, 20);
+            Board<Character> b1 = new BattleShipBoard<Character>(10, 20, 'X');
+            Board<Character> b2 = new BattleShipBoard<Character>(10, 20, 'X');
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
             // (*) Readers provide characters and Streams provide bytes.  Generally when
             //    working with text, you want a Reader.  You can always wrap an InputStream

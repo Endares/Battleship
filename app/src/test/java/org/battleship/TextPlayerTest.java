@@ -55,7 +55,7 @@ class TextPlayerTest {
     private TextPlayer createTextPlayer(int w, int h, String inputData, OutputStream bytes) {
         BufferedReader input = new BufferedReader(new StringReader(inputData));
         PrintStream output = new PrintStream(bytes, true);
-        Board<Character> board = new BattleShipBoard<Character>(w, h);
+        Board<Character> board = new BattleShipBoard<Character>(w, h, 'X');
         V1ShipFactory shipFactory = new V1ShipFactory();
         return new TextPlayer("A", board, input, output, shipFactory);
     }
@@ -116,7 +116,7 @@ class TextPlayerTest {
         // Simulate an empty input (EOF scenario)
         BufferedReader emptyInput = new BufferedReader(new StringReader(""));
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
-        Board<Character> board = new BattleShipBoard<>(5, 5);
+        Board<Character> board = new BattleShipBoard<>(5, 5, 'X');
         V1ShipFactory shipFactory = new V1ShipFactory();
         TextPlayer player = new TextPlayer("Player1", board, emptyInput, out, shipFactory);
 

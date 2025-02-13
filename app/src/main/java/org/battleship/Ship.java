@@ -52,12 +52,12 @@ public interface Ship<T> {
     /**
      * Return the view-specific information at the given coordinate. This coordinate
      * must be part of the ship.
-     *
+     * The info displayed should be different from self / enemy's perspective
      * @param where is the coordinate to return information for
      * @throws IllegalArgumentException if where is not part of the Ship
      * @return The view-specific information at that coordinate.
      */
-    public T getDisplayInfoAt(Coordinate where);
+    public T getDisplayInfoAt(Coordinate where, boolean myShip);
 
     /**
      * Get all of the Coordinates that this Ship occupies.

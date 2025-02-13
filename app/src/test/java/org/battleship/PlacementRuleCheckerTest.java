@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlacementRuleCheckerTest {
-    private final BattleShipBoard<Character> board = new BattleShipBoard<>(10, 10);
+    private final BattleShipBoard<Character> board = new BattleShipBoard<>(10, 10, 'X');
     private final V1ShipFactory factory = new V1ShipFactory();
     private final PlacementRuleChecker<Character> checker = new InBoundsRuleChecker<>(new NoCollisionRuleChecker<>(null));
 

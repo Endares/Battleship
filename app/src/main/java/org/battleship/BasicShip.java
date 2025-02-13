@@ -9,6 +9,7 @@ public abstract class BasicShip<T> implements Ship<T> {
     //private final Coordinate myLocation;
     protected HashMap<Coordinate, Boolean> myPieces;
     protected ShipDisplayInfo<T> myDisplayInfo;
+    protected ShipDisplayInfo<T> enemyDisplayInfo;
     /**
      * Track if the piece at a coordinate has been hit
      * if we have a coordinate c, and we look it up in the map:
@@ -21,12 +22,13 @@ public abstract class BasicShip<T> implements Ship<T> {
      * initialize myPieces to have each Coordinate in where mapped to false.
      * @param where
      */
-    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
+    public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
         myPieces = new HashMap<Coordinate, Boolean>();
         for (Coordinate c : where) {
             myPieces.put(c, false);
         }
         this.myDisplayInfo = myDisplayInfo;
+        this.enemyDisplayInfo = enemyDisplayInfo;
     }
 
     /**
@@ -63,11 +65,13 @@ public abstract class BasicShip<T> implements Ship<T> {
     }
 
     @Override
-    public T getDisplayInfoAt(Coordinate where) {
+    public T getDisplayInfoAt(Coordinate where, boolean myShip) {
         checkCoordinateInThisShip(where);
         //TODO this is not right.  We need to
         //look up the hit status of this coordinate
-        return myDisplayInfo.getInfo(where, myPieces.get(where));
+        return myShip
+                ? myDisplayInfo.getInfo(where, myPieces.get(where))
+                : enemyDisplayInfo.getInfo(where, myPieces.get(where));
     }
 
     /**

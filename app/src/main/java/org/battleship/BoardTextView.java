@@ -1,5 +1,7 @@
 package org.battleship;
 
+import java.util.function.Function;
+
 /**
  * This class handles textual display of
  * a Board (i.e., converting it to a string to show
@@ -27,8 +29,14 @@ public class BoardTextView {
                     "Board must be no larger than 10x26, but is " + toDisplay.getWidth() + "x" + toDisplay.getHeight());
         }
     }
-    public String displayMyOwnBoard() {
-        // display empty board
+
+    /**
+     * Display 2 boards for each player: owned board and enemy's board:
+     * owned board: ' ' for empty, '*' for hit ship,
+     *              letter for not-hit ship e.g.'s' for submarine
+     * enemy's board: letter for hit, 'X' for miss
+     */
+    protected String displayAnyBoard(Function<Coordinate, Character> getSquareFn) {
         StringBuilder result = new StringBuilder();
         result.append(makeHeader());
         for (int i = 0; i < toDisplay.getHeight(); i++) {
@@ -37,7 +45,9 @@ public class BoardTextView {
             result.append(letter).append(' ');
             for (int j = 0; j < toDisplay.getWidth(); j++) {
                 result.append(sep);
-                Character temp = toDisplay.whatIsAt(new Coordinate(i, j));
+                // The apply() method is part of Java’s built-in functional interface Function<T, R>.
+                // It is used to process an input of type T and return a result of type R.
+                Character temp = getSquareFn.apply(new Coordinate(i, j));
                 result.append(temp == null ? ' ' : temp);
                 sep = "|";
             }
@@ -47,6 +57,15 @@ public class BoardTextView {
         return result.toString();
     }
 
+
+    public String displayMyOwnBoard() {
+        return displayAnyBoard((c)->toDisplay.whatIsAtForSelf(c));
+        // Passes a lambda function (c) -> toDisplay.whatIsAtForSelf(c) to displayAnyBoard().
+    }
+
+    public String displayEnemyBoard() {
+        return displayAnyBoard((c)->toDisplay.whatIsAtForEnemy(c));
+    }
 
     /**
      * This makes the header line, e.g. 0|1|2|3|4\n
