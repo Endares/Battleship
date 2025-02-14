@@ -91,4 +91,25 @@ class BoardTextViewTest {
         String expected = expectedHeader + expectedBody + expectedHeader;
         assertEquals(expected, view.displayEnemyBoard());
     }
+
+    @Test
+    public void test_displayMyBoardWithEnemyNextToIt() {
+        BattleShipBoard<Character> myBoard = new BattleShipBoard<>(3, 3, 'X');
+        BattleShipBoard<Character> enemyBoard = new BattleShipBoard<>(3, 3, 'X');
+        BoardTextView myView = new BoardTextView(myBoard);
+        BoardTextView enemyView = new BoardTextView(enemyBoard);
+
+        myBoard.tryAddShip(new RectangleShip<>(new Coordinate(1, 1), 's', '*'));
+        enemyBoard.tryAddShip(new RectangleShip<>(new Coordinate(0, 2), 'd', '*'));
+        String actual = myView.displayMyBoardWithEnemyNextToIt(enemyView, "Your ocean", "Player B's ocean");
+        String expected =
+                "     Your ocean             Player B's ocean\n" +
+                "  0|1|2                    0|1|2\n" +
+                "A  | |  A                A  | |  A\n" +
+                "B  |s|  B                B  | |  B\n" +
+                "C  | |  C                C  | |  C\n" +
+                "  0|1|2                    0|1|2\n";
+        assertEquals(expected, actual);
+    }
+
 }

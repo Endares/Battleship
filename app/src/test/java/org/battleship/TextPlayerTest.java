@@ -123,4 +123,103 @@ class TextPlayerTest {
         // Expect an EOFException when input is exhausted
         assertThrows(EOFException.class, () -> player.readPlacement("Enter ship placement:"));
     }
+
+    @Test
+    public void test_readAndFire_invalidPlacement() throws IOException {
+        V1ShipFactory shipFactory = new V1ShipFactory();
+        // Input sequence:
+        // 1. Invalid coordinate: Z9
+        // 2. Valid coordinate: A1
+        String simulatedInput = "a0v\nA1\n";
+        BufferedReader input = new BufferedReader(new StringReader(simulatedInput));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outputStream);
+
+        // Initialize player boards
+        Board<Character> myBoard = new BattleShipBoard<>(5, 5, 'X');
+        Board<Character> enemyBoard = new BattleShipBoard<>(5, 5, 'X');
+        TextPlayer playerA = new TextPlayer("PlayerA", myBoard, input, out, new V1ShipFactory());
+        TextPlayer playerB = new TextPlayer("PlayerB", enemyBoard, new BufferedReader(new StringReader("")), out, new V1ShipFactory());
+
+        // Place a submarine at A1 on enemy board
+        enemyBoard.tryAddShip(shipFactory.makeSubmarine(new Placement("A1V")));
+
+        // Simulate firing phase
+        playerA.readAndFire(playerB, "Where do you want to fire at?");
+
+        String output = outputStream.toString();
+
+        // Verify output contains expected prompts
+        assertTrue(output.contains("Invalid coordinate. Please try again."), "Should prompt for invalid coordinate.");
+        assertTrue(output.contains("You hit a Submarine!"), "Should confirm hit on Submarine.");
+
+    }
+//    @Test
+//    public void test_readAndFire_inValidCoordinate() throws IOException {
+//        V1ShipFactory shipFactory = new V1ShipFactory();
+//        // 1. Invalid coordinate: A0V
+//        // 2. Valid coordinate: A1
+//        String simulatedInput = "a0v\nA1\n";
+//        BufferedReader input = new BufferedReader(new StringReader(simulatedInput));
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        PrintStream out = new PrintStream(outputStream);
+//
+//        // Initialize player boards
+//        Board<Character> myBoard = new BattleShipBoard<>(5, 5, 'X');
+//        Board<Character> enemyBoard = new BattleShipBoard<>(5, 5, 'X');
+//        TextPlayer playerA = new TextPlayer("PlayerA", myBoard, input, out, new V1ShipFactory());
+//        TextPlayer playerB = new TextPlayer("PlayerB", enemyBoard, new BufferedReader(new StringReader("")), out, new V1ShipFactory());
+//
+//        String output = outputStream.toString();
+//        // Place a submarine at A1 on enemy board
+//        enemyBoard.tryAddShip(shipFactory.makeSubmarine(new Placement("A1V")));
+//
+//        // Simulate firing phase
+//        playerA.readAndFire(playerB, "Where do you want to fire at?");
+//
+//        // Verify output contains expected prompts
+//        assertTrue(output.contains("Invalid coordinate. Please try again."), "Should prompt for invalid coordinate.");
+//        assertTrue(output.contains("You hit a Submarine!"), "Should confirm hit on Submarine.");
+//    }
+    @Test
+    public void test_readAndFire_inValidPlacement() throws IOException {
+        V1ShipFactory shipFactory = new V1ShipFactory();
+        // Input sequence:
+        // 1. Invalid placement: A0j
+        // 2. Valid placement: a3v
+        String simulatedInput = "A0j\na3v\n";
+        BufferedReader input = new BufferedReader(new StringReader(simulatedInput));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outputStream);
+
+        // Initialize player boards
+        Board<Character> myBoard = new BattleShipBoard<>(5, 5, 'X');
+        Board<Character> enemyBoard = new BattleShipBoard<>(5, 5, 'X');
+        TextPlayer playerA = new TextPlayer("PlayerA", myBoard, input, out, new V1ShipFactory());
+        TextPlayer playerB = new TextPlayer("PlayerB", enemyBoard, new BufferedReader(new StringReader("")), out, new V1ShipFactory());
+
+        // Placement failure test
+        playerA.doOnePlacement("Submarine", shipFactory::makeSubmarine);
+
+        String output = outputStream.toString();
+        assertTrue(output.contains("Invalid input format"),
+                "Expected 'Invalid input format' message for wrong placement.");
+    }
+
+    @Test
+    public void test_readAndFire_eofException() {
+        String simulatedInput = "";
+        BufferedReader input = new BufferedReader(new StringReader(simulatedInput));
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outputStream);
+
+        Board<Character> myBoard = new BattleShipBoard<>(5, 5, 'X');
+        Board<Character> enemyBoard = new BattleShipBoard<>(5, 5, 'X');
+        TextPlayer playerA = new TextPlayer("PlayerA", myBoard, input, out, new V1ShipFactory());
+        TextPlayer playerB = new TextPlayer("PlayerB", enemyBoard, input, out, new V1ShipFactory());
+
+        assertThrows(EOFException.class,
+                () -> playerA.readAndFire(playerB, "Where do you want to fire?"),
+                "Should throw EOFException。");
+    }
 }

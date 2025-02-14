@@ -103,11 +103,22 @@ public class BattleShipBoard<T> implements Board<T> {
         for (Ship<T> s: myShips) {
             if (s.occupiesCoordinates(c)) {
                 s.recordHitAt(c);
-                return s;
+                return s;   // hit
             }
         }
         enemyMisses.add(c);
-        return null;
+        return null;    // miss
     }
 
+    /**
+     * Used to determine a TextPlayer's lose / win
+     * @return
+     */
+    @Override
+    public boolean allSunk () {
+        for (Ship<T> s : myShips) {
+            if (!s.isSunk()) return false;
+        }
+        return true;
+    }
 }

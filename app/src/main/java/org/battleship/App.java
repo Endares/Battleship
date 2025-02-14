@@ -29,10 +29,26 @@ public class App {
 
             App app = new App(p1, p2);
             app.doPlacementPhase();
+            app.firePhase();
       }
 
       public void doPlacementPhase() throws IOException {
             player1.doPlacementPhase();
             player2.doPlacementPhase();
+      }
+
+      public void firePhase() throws IOException {
+            while (true) {
+                  player1.firePhase(player2, "My Ocean", "Player" + player2.getName() + "'s Ocean");
+                  if (player2.isLost()) {
+                        System.out.println("Player" + player1.getName() + " wins!");
+                        break;
+                  }
+                  player2.firePhase(player1, "My Ocean", "Player" + player1.getName() + "'s Ocean");
+                  if (player1.isLost()) {
+                        System.out.println("Player" + player2.getName() + " wins!");
+                        break;
+                  }
+            }
       }
 }

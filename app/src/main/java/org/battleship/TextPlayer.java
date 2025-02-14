@@ -24,6 +24,9 @@ public class TextPlayer {
     // a map from ship name to the lambda to create it
     final HashMap<String, Function<Placement, Ship<Character>>> shipCreationFns;
 
+    public String getName() {
+        return name;
+    }
 
     public TextPlayer(String name, Board<Character> theBoard, BufferedReader inputReader, PrintStream out, AbstractShipFactory<Character> shipFactory) {
         this.theBoard = theBoard;
@@ -90,10 +93,31 @@ public class TextPlayer {
      * @throws IOException
      */
     public void doOnePlacement(String shipName, Function<Placement, Ship<Character>> createFn) throws IOException {
-        Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
-        Ship<Character> s = createFn.apply(p);
-        theBoard.tryAddShip(s);
-        out.print(view.displayMyOwnBoard());
+//        Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+//        Ship<Character> s = createFn.apply(p);
+//        theBoard.tryAddShip(s);
+//        out.print(view.displayMyOwnBoard());
+        while (true) {
+            try {
+                // Prompt the user for placement input
+                Placement p = readPlacement("Player " + name + " where do you want to place a " + shipName + "?");
+                // Create the ship based on user input
+                Ship<Character> s = createFn.apply(p);
+                // Attempt to place the ship on the board
+                boolean isSuccess = theBoard.tryAddShip(s);
+                // Check placement result
+                if (!isSuccess) {
+                    out.println("Invalid placement: overlaps another ship or out of bounds. Please try again.");
+                } else {
+                    // Successful placement: display the board and break out of the loop
+                    out.print(view.displayMyOwnBoard());
+                    break; // Exit loop on success
+                }
+            } catch (IllegalArgumentException e) {
+                // Handle invalid input format from Placement constructor
+                out.println("Invalid input format: " + e.getMessage() + ". Please try again.");
+            }
+        }
     }
 
     /**
@@ -119,5 +143,51 @@ public class TextPlayer {
         for (String s : shipsToPlace) {
             doOnePlacement(s, shipCreationFns.get(s));
         }
+    }
+
+    public void firePhase(TextPlayer enemy, String myHeader, String enemyHeader) throws IOException {
+        out.println("Player" + name + "'s turn:");
+        out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
+        readAndFire(enemy, "Player" + name + ", where do you want to fire at?");
+        out.println(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
+    }
+
+    /**
+     * Read a line (coordinate) to fire at and fire.
+     * @param prompt
+     * @throws IOException
+     */
+    public void readAndFire(TextPlayer enemy, String prompt) throws IOException {
+        while (true) {
+            try {
+                out.println(prompt);
+                // Note that we are not doing error checking YET (later, in task 17).  Also note
+                // that we don't print to System.out, we print to out.  Why?  We might want to print
+                // somewhere else, especially for testing.   When we want System.out, we'll pass it into
+                // the constructor.
+                String s = inputReader.readLine();
+                if (s == null) {
+                    throw new EOFException("End of input reached. Exiting the game.");
+                }
+                Ship<Character> ship = enemy.theBoard.fireAt(new Coordinate(s));
+                if (ship == null) {
+                    out.println("You missed!");
+                } else {
+                    out.println("You hit a " + ship.getName() + "!");
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                // Handle invalid coordinate format
+                out.println("Invalid coordinate. Please try again.");
+            }
+        }
+    }
+
+    /**
+     * If all ships are sunk, then this player lost
+     * @return
+     */
+    public boolean isLost() {
+        return theBoard.allSunk();
     }
 }

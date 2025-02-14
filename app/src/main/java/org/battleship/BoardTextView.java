@@ -57,6 +57,65 @@ public class BoardTextView {
         return result.toString();
     }
 
+    /**
+     * Player A's turn:
+     *      Your ocean                           Player B's ocean
+     *   0|1|2|3|4|5|6|7|8|9                    0|1|2|3|4|5|6|7|8|9
+     * A s| | | | | | | |c|  A                A  | | | | | | | | |  A
+     * B s| |d| | | | | |c|  B                B  | | | | | | | | |  B
+     * C  | |*| | | | | |c|  C                C  | |X| | | | | | |  C
+     * D  | |d| | | | | |c|  D                D  |X|d|d| | | | | |  D
+     * E  | | | | | | | |c|  E                E  | |X| | | | | | |  E
+     * F  | |d| | | | | |c|  F                F  | | | | | | | | |  F
+     * G  | |d| | | |b| | |  G                G  | | | | | | | | |  G
+     * H  | |d| | | |b| | |  H                H  | | | | | | | | |  H
+     * I  | | | | | |b| | |  I                I  | | | | | | | | |  I
+     * J  | | | | | |b| | |  J                J  | | |X| | | | | |  J
+     * K c|c|c|c|c|c| | | |  K                K  | | | | | | | | |  K
+     * L  | | | | | | | | |  L                L  | | | |X| | | | |  L
+     * M  | | | |s|s| | | |  M                M  | | | | | | | | |  M
+     * N  | | | | | | | | |  N                N  | | | | | | | | |  N
+     * O  | | | | | |b| | |  O                O  | | | | |s|s| | |  O
+     * P  | | | | | |b| | |  P                P  | | | | | | | | |  P
+     * Q  | | | | | |b| | |  Q                Q  | | | | | | | | |  Q
+     * R  | | | | | |b| | |  R                R  | | | | | | | | |  R
+     * S  | | | | | | | | |  S                S  | | | | | | | | |  S
+     * T d|d|d| | | | | | |  T                T  | | | | | | | | |  T
+     *   0|1|2|3|4|5|6|7|8|9                    0|1|2|3|4|5|6|7|8|9
+     */
+    public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader) {
+        // Get the string representations of both boards
+        String[] myLines = displayMyOwnBoard().split("\\n");
+        String[] enemyLines = enemyView.displayEnemyBoard().split("\\n");
+
+        // Calculate spacing
+        int boardWidth = toDisplay.getWidth();
+        int myHeaderStart = 5;
+        int enemyStartCol = 2 * boardWidth + 19;
+        int enemyHeaderStart = 2 * boardWidth + 22;
+
+        // Create a StringBuilder for the result
+        StringBuilder result = new StringBuilder();
+
+        // Add headers
+        result.append(String.format("%" + myHeaderStart + "s%s%"
+                        + (enemyHeaderStart - myHeaderStart - myHeader.length()) + "s%s\n",
+                "", myHeader, "", enemyHeader));
+        // %5s: Prints a string with a minimum width of 5 (right-aligned).
+        // %s: Prints the player’s header (myHeader), e.g., "Your Ocean".
+        // % + (enemyHeaderStart - myHeader.length()) + "s":
+        // Adds padding spaces between the two headers.
+        // %s: Prints the enemy’s header (enemyHeader), e.g., "Enemy's Ocean".
+
+        // Combine each line from both boards
+        for (int i = 0; i < myLines.length && i < enemyLines.length; i++) {
+            result.append(String.format("%-" + enemyStartCol + "s%s\n", myLines[i], enemyLines[i]));
+        }
+        // %-<width>s: Left-aligns myLines[i] with a fixed width (enemyStartCol).
+        // %s: Appends enemyLines[i] immediately after.
+
+        return result.toString();
+    }
 
     public String displayMyOwnBoard() {
         return displayAnyBoard((c)->toDisplay.whatIsAtForSelf(c));
