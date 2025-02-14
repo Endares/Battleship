@@ -29,7 +29,7 @@ public class App {
 
             App app = new App(p1, p2);
             app.doPlacementPhase();
-            app.firePhase();
+            app.doAttackingPhase();
       }
 
       public void doPlacementPhase() throws IOException {
@@ -37,7 +37,7 @@ public class App {
             player2.doPlacementPhase();
       }
 
-      public void firePhase() throws IOException {
+      public void doAttackingPhase() throws IOException {
             while (true) {
                   player1.firePhase(player2, "My Ocean", "Player" + player2.getName() + "'s Ocean");
                   if (player2.isLost()) {
