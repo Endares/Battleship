@@ -111,6 +111,23 @@ public class BattleShipBoard<T> implements Board<T> {
     }
 
     /**
+     * Display ship's name at corrdinate c
+     * Even if the ship piece is already fired, it will display original character
+     * This method is used by sonarScan() in TextPlayer.java
+     * @param c
+     * @return
+     */
+    @Override
+    public String displayShipAt(Coordinate c) {
+        for (Ship<T> s: myShips) {
+            if (s.occupiesCoordinates(c)) {
+                return s.getName();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Used to determine a TextPlayer's lose / win
      * @return
      */
@@ -121,4 +138,5 @@ public class BattleShipBoard<T> implements Board<T> {
         }
         return true;
     }
+
 }

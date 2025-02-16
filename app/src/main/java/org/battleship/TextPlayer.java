@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.function.Function;
 
 public class TextPlayer {
@@ -34,7 +35,7 @@ public class TextPlayer {
         this.inputReader = inputReader;
         this.out = out;
         this.name = name;
-        this.shipFactory = new V1ShipFactory();
+        this.shipFactory = shipFactory;
         this.shipsToPlace = new ArrayList<>();
         this.shipCreationFns = new HashMap<>();
 
@@ -189,5 +190,32 @@ public class TextPlayer {
      */
     public boolean isLost() {
         return theBoard.allSunk();
+    }
+
+    public void sonarScan(Coordinate coordinate) {
+        // count of 4 kinds of ships
+        LinkedHashMap<String, Integer> shipCounts = new LinkedHashMap<>();
+        shipCounts.put("Submarine", 0);
+        shipCounts.put("Destroyer", 0);
+        shipCounts.put("Battleship", 0);
+        shipCounts.put("Carrier", 0);
+        int row = coordinate.getRow();
+        int column = coordinate.getColumn();
+        int height = theBoard.getHeight();
+        int width = theBoard.getWidth();
+        for (int i = Math.max(0, row - 3); i <= Math.min(height - 1, row + 3); ++i) {
+            int k = 3 - Math.abs(i - row);
+            for (int j = Math.max(0, column - k); j <= Math.min(width - 1, column + k); ++j) {
+                String name = theBoard.displayShipAt(new Coordinate(i, j));
+                if (name != null) {
+                    shipCounts.put(name, shipCounts.get(name) + 1);
+                }
+            }
+        }
+        for (var enty : shipCounts.entrySet()) {
+            String name = enty.getKey();
+            int count = enty.getValue();
+            out.println(name + "s occupy " + count + " squares");
+        }
     }
 }

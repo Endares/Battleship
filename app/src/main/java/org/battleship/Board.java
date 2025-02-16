@@ -8,4 +8,5 @@ public interface Board<T> {
     public T whatIsAtForEnemy(Coordinate where);
     public Ship<T> fireAt(Coordinate c);
     public boolean allSunk();
+    public String displayShipAt(Coordinate c);
 }

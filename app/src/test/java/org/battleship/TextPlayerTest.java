@@ -222,4 +222,37 @@ class TextPlayerTest {
                 () -> playerA.readAndFire(playerB, "Where do you want to fire?"),
                 "Should throw EOFException。");
     }
+
+    @Test
+    public void test_sonarScan() {
+        V2ShipFactory factory = new V2ShipFactory();
+
+        Board<Character> theBoard = new BattleShipBoard<>(7, 7, 'X');
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        PrintStream out = new PrintStream(System.out);
+
+        TextPlayer playerA = new TextPlayer("PlayerA", theBoard, input, out, new V1ShipFactory());
+        theBoard.tryAddShip(factory.makeSubmarine(new Placement("A1V")));
+        theBoard.tryAddShip(factory.makeSubmarine(new Placement("C4h")));
+        theBoard.tryAddShip(factory.makeDestroyer(new Placement("e1h")));
+        theBoard.tryAddShip(factory.makeBattleship(new Placement("d4l")));
+        theBoard.tryAddShip(factory.makeCarrier(new Placement("f0r")));
+
+        Coordinate center = new Coordinate(4, 4);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream testOut = new PrintStream(outputStream);
+        TextPlayer testPlayer = new TextPlayer("PlayerA", theBoard, input, testOut, new V2ShipFactory());
+        testPlayer.sonarScan(center);
+        String output = outputStream.toString();
+
+        String expected = """
+            Submarines occupy 2 squares
+            Destroyers occupy 3 squares
+            Battleships occupy 4 squares
+            Carriers occupy 3 squares
+            """;
+
+        assertEquals(expected.trim(), output.trim());
+    }
 }

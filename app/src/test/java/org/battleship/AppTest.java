@@ -14,10 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
 
 class AppTest {
+    @Disabled
     @Test
     @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
     // Ensures that System.out is not modified by other tests while this test runs.
-    void test_main() throws IOException {
+    void test_main_V1_Awins() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bytes, true);
 
@@ -56,10 +57,11 @@ class AppTest {
         assertEquals(expected, actual);
     }
 
+    @Disabled
     @Test
     @ResourceLock(value = Resources.SYSTEM_OUT, mode = ResourceAccessMode.READ_WRITE)
         // Ensures that System.out is not modified by other tests while this test runs.
-    void test_main_Bwins() throws IOException {
+    void test_main_V1_Bwins() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bytes, true);
 

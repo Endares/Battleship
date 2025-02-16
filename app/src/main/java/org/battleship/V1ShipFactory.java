@@ -2,6 +2,9 @@ package org.battleship;
 
 public class V1ShipFactory implements AbstractShipFactory<Character> {
     protected Ship<Character> createShip(Placement where, int w, int h, char letter, String name) {
+        if (where.getOrientation() != 'V' && where.getOrientation() != 'H') {
+            throw new IllegalArgumentException("That placement is invalid: it does not have the correct format.");
+        }
         return (where.getOrientation() == 'V')
                 ? new RectangleShip<>(name, where.getWhere(), w, h, letter, '*')
                 : new RectangleShip<>(name, where.getWhere(), h, w, letter, '*');

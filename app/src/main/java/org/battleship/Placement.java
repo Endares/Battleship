@@ -29,7 +29,9 @@ public class Placement {
         char orientLetter = Character.toUpperCase(str.charAt(2));
         if (rowLetter < 'A' || rowLetter > 'Z'
                 || columnLetter < '0' || columnLetter > '9'
-                || orientLetter != 'V' && orientLetter != 'H') {
+                || (orientLetter != 'V' && orientLetter != 'H'
+                && orientLetter != 'U' && orientLetter != 'D'
+                && orientLetter != 'L' && orientLetter != 'R')) {
             throw new IllegalArgumentException("That placement is invalid: it does not have the correct format.");
         }
 //        if (rowLetter < 'A' || rowLetter > 'Z') {

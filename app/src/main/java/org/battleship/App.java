@@ -20,8 +20,9 @@ public class App {
             // (*) Readers provide characters and Streams provide bytes.  Generally when
             //    working with text, you want a Reader.  You can always wrap an InputStream
             //    in an InputStreamReader to do the conversion.
-            V1ShipFactory factory = new V1ShipFactory();
-
+            // V1ShipFactory factory = new V1ShipFactory();
+            V2ShipFactory factory = new V2ShipFactory();
+            // System.out.println("Using factory class: " + factory.getClass().getSimpleName());
             // 2 players share BufferedReader and System.out
             // 2 players have their own board and view
             TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
