@@ -4,6 +4,7 @@
 package org.battleship;
 
 import java.io.*;
+import java.util.Objects;
 
 public class App {
       private TextPlayer player1, player2;
@@ -25,10 +26,46 @@ public class App {
             // System.out.println("Using factory class: " + factory.getClass().getSimpleName());
             // 2 players share BufferedReader and System.out
             // 2 players have their own board and view
-            TextPlayer p1 = new TextPlayer("A", b1, input, System.out, factory);
-            TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
-
+            TextPlayer p1 = createPlayer("first", input, b1, factory, "A");
+            TextPlayer p2 = createPlayer("second", input, b2, factory, "B");
+            System.out.println((p1.getClass() == ComputerTextPlayer.class ? "Computer" : "Human") + " vs "
+                              + (p2.getClass() == ComputerTextPlayer.class ? "Computer" : "Human") );
             App app = new App(p1, p2);
+            playTheGame(app);
+      }
+
+      public static TextPlayer createPlayer(String playerIndex, BufferedReader input, Board<Character> b, V2ShipFactory factory, String name) throws IOException {
+            System.out.print("Welcome to Battleship! Please select the " + playerIndex + " player:\n"
+                    + "H: Human\n" + "C: Computer\n");
+            while (true) {
+                  try {
+                        String s = input.readLine().toUpperCase();
+                        /*
+                           If using s == "H" here:
+                           When you get input from BufferedReader.readLine(),
+                           the returned String is a new object. Even if the content is
+                           the same, the references are different.If you do not print
+                           with System.out.println() immediately after the input,
+                           it will not trigger the output buffer flush, potentially
+                           causing input/output synchronization issues, especially in
+                           interactive console applications.
+                         */
+                        if (Objects.equals(s, "H")) {
+                              return new TextPlayer(name, b, input, System.out, factory);
+                        } else if (Objects.equals(s, "C")) {
+                              return new ComputerTextPlayer(name, b, input, System.out, factory);
+                        } else {
+                              throw new IllegalArgumentException("Invalid option: " + s);
+                        }
+                  } catch (IllegalArgumentException e) {
+                        // Handle invalid input format from Placement constructor
+                        System.out.println(e.getMessage() + ". Please try again.");
+                  }
+            }
+
+      }
+
+      public static void playTheGame(App app) throws IOException {
             app.doPlacementPhase();
             app.doAttackingPhase();
       }
@@ -52,6 +89,4 @@ public class App {
                   }
             }
       }
-
-
 }

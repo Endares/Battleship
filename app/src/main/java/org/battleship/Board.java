@@ -11,4 +11,5 @@ public interface Board<T> {
     public boolean allSunk();
     public String displayShipAt(Coordinate c);
     public Ship<T> getShipAt(Coordinate c);
+    public Ship<T> getRandomShip();
 }

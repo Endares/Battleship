@@ -147,7 +147,7 @@ public class BattleShipBoard<T> implements Board<T> {
     }
 
     /**
-     * Display ship's name at corrdinate c
+     * Display ship's name at coordinate c
      * Even if the ship piece is already fired, it will display original character
      * This method is used by sonarScan() in TextPlayer.java
      * @param c
@@ -202,4 +202,18 @@ public class BattleShipBoard<T> implements Board<T> {
         }
         return false;
     }
+
+    /**
+     * Used for computer player, select a random ship from myShips
+     */
+    @Override
+    public Ship<T> getRandomShip() {
+        if (myShips.isEmpty()) {
+            throw new IllegalArgumentException("The list is empty!");
+        }
+        Random random = new Random();
+        int index = random.nextInt(myShips.size()); // [0, n - 1]
+        return myShips.get(index);
+    }
+
 }

@@ -10,7 +10,9 @@ public class Placement {
 
     public Placement(Coordinate where, char orientation) {
         orientation = Character.toUpperCase(orientation);
-        if (orientation != 'V' && orientation != 'H') {
+        if (orientation != 'V' && orientation != 'H'
+                && orientation != 'L' && orientation != 'R'
+                && orientation != 'U' && orientation != 'D') {
             throw new IllegalArgumentException("Invalid orientation: " + orientation);
         }
         this.where = where;

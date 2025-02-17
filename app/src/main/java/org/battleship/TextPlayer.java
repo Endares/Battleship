@@ -15,9 +15,9 @@ public class TextPlayer {
     final BufferedReader inputReader;
     final PrintStream out;
     final AbstractShipFactory<Character> shipFactory;
-    private String name;
-    private Integer remainMovements;
-    private Integer remainSonar;
+    protected String name;
+    protected Integer remainMovements;
+    protected Integer remainSonar;
 
     // an ArrayList of ships' names
     final ArrayList<String> shipsToPlace;
@@ -225,50 +225,41 @@ public class TextPlayer {
      * Move a ship at c to newPlacement
      * If newPlacement is not valid, loop until the player input a valid placement
      */
-    public void makeMovement(Coordinate c, Placement newPlacement) {
-        while (true) {
-            try {
-                Ship<Character> ship = theBoard.getShipAt(c);
-                if (ship == null) {
-                    throw new IllegalArgumentException("No ship found");
-                }
-                boolean isSuccess = theBoard.tryMoveShip(ship, newPlacement);
-                if (!isSuccess) {
-                    out.println("Invalid movement: overlaps another ship or out of bounds. Please try again.");
-                } else {
-                    // Successful movement: display the board and break out of the loop
-                    out.print(view.displayMyOwnBoard());
-                    break; // Exit loop on success
-                }
-            } catch (IllegalArgumentException e) {
-                // Handle invalid input format from Placement constructor
-                out.println("Invalid input format: " + e.getMessage() + ". Please try again.");
-            }
+    public void makeMovement(Ship<Character> ship, Placement newPlacement) {
+        boolean isSuccess = theBoard.tryMoveShip(ship, newPlacement);
+        if (!isSuccess) {
+            throw new IllegalArgumentException("Invalid movement: overlaps another ship or out of bounds.");
+        } else {
+            // Successful movement: display the board and break out of the loop
+            out.print(view.displayMyOwnBoard());
         }
+
     }
 
     public void doMovementPhase() throws IOException {
+        out.print(view.displayMyOwnBoard());
         while (true) {
             try {
-                out.print(view.displayMyOwnBoard());
                 out.println("Please select a ship to move by entering a coordinate:");
                 String s = inputReader.readLine();
                 if (s == null) {
                     throw new EOFException("End of input reached. Exiting the game.");
                 }
                 Coordinate c = new Coordinate(s);
+                Ship<Character> ship = theBoard.getShipAt(c);
+                if (ship == null) throw new IllegalArgumentException("Ship not found at: " + s);
                 out.println("Please enter the new placement:");
                 s = inputReader.readLine();
                 if (s == null) {
                     throw new EOFException("End of input reached. Exiting the game.");
                 }
                 Placement p = new Placement(s);
-                makeMovement(c, p);
+                makeMovement(ship, p);
                 --remainMovements;
                 break;
             } catch (IllegalArgumentException e) {
                 // Handle invalid coordinate format
-                out.println("Invalid coordinate or placement. Please try again.");
+                out.println("Invalid coordinate or placement: " + e.getMessage() + " Please try again.");
             }
         }
     }
@@ -281,10 +272,10 @@ public class TextPlayer {
     }
 
     public void sonarScanPhase(TextPlayer enemy) throws IOException  {
+        out.println("Displaying player " + enemy.name + "'s Ocean:");
+        out.print(enemy.view.displayEnemyBoard());
         while (true) {
             try {
-                out.println("Displaying player " + enemy.name + "'s Ocean:");
-                out.print(enemy.view.displayEnemyBoard());
                 out.println("Please enter the center coordinate of a sonar scan:");
                 String s = inputReader.readLine();
                 if (s == null) {
