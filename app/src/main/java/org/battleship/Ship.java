@@ -1,5 +1,7 @@
 package org.battleship;
 
+import java.util.LinkedHashMap;
+
 /**
  * This interface represents any type of Ship in our Battleship game. It is
  * generic in typename T, which is the type of information the view needs to
@@ -11,7 +13,7 @@ public interface Ship<T> {
      * @return the name of this ship
      */
     public String getName();
-
+    public LinkedHashMap<Coordinate, Boolean> getMyPieces();
     /**
      * Check if this ship occupies the given coordinate.
      *
@@ -64,4 +66,10 @@ public interface Ship<T> {
      * @return An Iterable with the coordinates that this Ship occupies
      */
     public Iterable<Coordinate> getCoordinates();
+
+    /**
+     * Move the ship to new location by simply emplace myPieces
+     * @param newPieces new Pieces, containing each piece's previous status (hit or not)
+     */
+    public void moveShipTo(LinkedHashMap<Coordinate, Boolean> newPieces);
 }

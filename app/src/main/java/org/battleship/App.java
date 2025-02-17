@@ -40,16 +40,18 @@ public class App {
 
       public void doAttackingPhase() throws IOException {
             while (true) {
-                  player1.firePhase(player2, "My Ocean", "Player" + player2.getName() + "'s Ocean");
-                  if (player2.isLost()) {
+                  player1.makeActionChoice(player2);
+                  if (player2.isLost()){
                         System.out.println("Player" + player1.getName() + " wins!");
                         break;
                   }
-                  player2.firePhase(player1, "My Ocean", "Player" + player1.getName() + "'s Ocean");
-                  if (player1.isLost()) {
+                  player2.makeActionChoice(player1);
+                  if (player1.isLost()){
                         System.out.println("Player" + player2.getName() + " wins!");
                         break;
                   }
             }
       }
+
+
 }

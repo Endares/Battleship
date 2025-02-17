@@ -4,6 +4,7 @@ import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 public class NonRectangleShip<T> extends BasicShip<T>{
@@ -26,7 +27,7 @@ public class NonRectangleShip<T> extends BasicShip<T>{
         // 1.nothing if not hit; 2.data if hit
     }
 
-    private static HashSet<Coordinate> getCoordsForType(String type, Coordinate upperLeft, Character orientation) {
+    private static ArrayList<Coordinate> getCoordsForType(String type, Coordinate upperLeft, Character orientation) {
         type = type.toLowerCase();
         if (type.equals("battleship")) {
             return makeBattleshipCoords(upperLeft, orientation);
@@ -37,7 +38,7 @@ public class NonRectangleShip<T> extends BasicShip<T>{
         }
     }
 
-    static HashSet<Coordinate> makeBattleshipCoords(Coordinate upperLeft, Character orientation) {
+    static ArrayList<Coordinate> makeBattleshipCoords(Coordinate upperLeft, Character orientation) {
         //HashSet<Coordinate> coords = new HashSet<>();
         //Coordinate c1, c2, c3, c4;
         ArrayList<Coordinate> coords = new ArrayList<>();
@@ -68,10 +69,10 @@ public class NonRectangleShip<T> extends BasicShip<T>{
             coords.add(new Coordinate(upperLeft.getRow() + 1, upperLeft.getColumn() + 1));
             coords.add(new Coordinate(upperLeft.getRow(), upperLeft.getColumn() + 1));
         }
-        return new HashSet<>(coords);
+        return coords;
     }
 
-    static HashSet<Coordinate> makeCarrierCoords (Coordinate upperLeft, Character orientation) {
+    static ArrayList<Coordinate> makeCarrierCoords (Coordinate upperLeft, Character orientation) {
         ArrayList<Coordinate> coords = new ArrayList<>();
         /**
          *    C                       C
@@ -115,7 +116,6 @@ public class NonRectangleShip<T> extends BasicShip<T>{
             coords.add(new Coordinate(upperLeft.getRow(), upperLeft.getColumn() + 3));
             coords.add(new Coordinate(upperLeft.getRow(), upperLeft.getColumn() + 4));
         }
-        return new HashSet<>(coords);
+        return coords;
     }
-
 }

@@ -1,6 +1,8 @@
 package org.battleship;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 public class RectangleShip<T> extends BasicShip<T> {
     private final String name;
@@ -25,8 +27,8 @@ public class RectangleShip<T> extends BasicShip<T> {
         this("testship", upperLeft, 1, 1, data, onHit);
     }
 
-    static HashSet<Coordinate> makeCoords(Coordinate upperLeft, int width, int height) {
-        HashSet<Coordinate> coords = new HashSet<>();
+    static ArrayList<Coordinate> makeCoords(Coordinate upperLeft, int width, int height) {
+        ArrayList<Coordinate> coords = new ArrayList<>();
         for (int i = upperLeft.getRow(); i < upperLeft.getRow() + height; i++) {
             for (int j = upperLeft.getColumn(); j < upperLeft.getColumn() + width; j++) {
                 coords.add(new Coordinate(i, j));
@@ -34,4 +36,32 @@ public class RectangleShip<T> extends BasicShip<T> {
         }
         return coords;
     }
+
+//
+//    /**
+//     * BarShip: ship with width or height 1, special form of rectangle ship
+//     * @param ship
+//     * @param newPlacement
+//     */
+//    @Override
+//    public void rotateBarShip(Placement newPlacement) {
+//        LinkedHashMap<Coordinate, Boolean> newPieces = new LinkedHashMap<>();
+//        int index = 0;
+//        // left upper coordinate of new ship position
+//        int row = newPlacement.getWhere().getRow();
+//        int column = newPlacement.getWhere().getColumn();
+//
+//        if (newPlacement.getOrientation() == 'V') {
+//            for (var entry : myPieces.entrySet()) {
+//                newPieces.put(new Coordinate(row + index, column), entry.getValue());
+//                ++index;
+//            }
+//        } else if (newPlacement.getOrientation() == 'H') {
+//            for (var entry : myPieces.entrySet()) {
+//                newPieces.put(new Coordinate(row, column + index), entry.getValue());
+//                ++index;
+//            }
+//        }
+//        myPieces = newPieces;
+//    }
 }

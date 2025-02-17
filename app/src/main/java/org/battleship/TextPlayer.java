@@ -1,10 +1,7 @@
 package org.battleship;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.function.Function;
 
 public class TextPlayer {
@@ -19,6 +16,8 @@ public class TextPlayer {
     final PrintStream out;
     final AbstractShipFactory<Character> shipFactory;
     private String name;
+    private Integer remainMovements;
+    private Integer remainSonar;
 
     // an ArrayList of ships' names
     final ArrayList<String> shipsToPlace;
@@ -38,6 +37,8 @@ public class TextPlayer {
         this.shipFactory = shipFactory;
         this.shipsToPlace = new ArrayList<>();
         this.shipCreationFns = new HashMap<>();
+        this.remainMovements = 3;
+        this.remainSonar = 2;
 
         // Initialize ship creation mappings and ship order
         setupShipCreationMap();
@@ -170,6 +171,7 @@ public class TextPlayer {
                 if (s == null) {
                     throw new EOFException("End of input reached. Exiting the game.");
                 }
+                // fire at enemy's board
                 Ship<Character> ship = enemy.theBoard.fireAt(new Coordinate(s));
                 if (ship == null) {
                     out.println("You missed!");
@@ -216,6 +218,117 @@ public class TextPlayer {
             String name = enty.getKey();
             int count = enty.getValue();
             out.println(name + "s occupy " + count + " squares");
+        }
+    }
+
+    /**
+     * Move a ship at c to newPlacement
+     * If newPlacement is not valid, loop until the player input a valid placement
+     */
+    public void makeMovement(Coordinate c, Placement newPlacement) {
+        while (true) {
+            try {
+                Ship<Character> ship = theBoard.getShipAt(c);
+                if (ship == null) {
+                    throw new IllegalArgumentException("No ship found");
+                }
+                boolean isSuccess = theBoard.tryMoveShip(ship, newPlacement);
+                if (!isSuccess) {
+                    out.println("Invalid movement: overlaps another ship or out of bounds. Please try again.");
+                } else {
+                    // Successful movement: display the board and break out of the loop
+                    out.print(view.displayMyOwnBoard());
+                    break; // Exit loop on success
+                }
+            } catch (IllegalArgumentException e) {
+                // Handle invalid input format from Placement constructor
+                out.println("Invalid input format: " + e.getMessage() + ". Please try again.");
+            }
+        }
+    }
+
+    public void doMovementPhase() throws IOException {
+        while (true) {
+            try {
+                out.print(view.displayMyOwnBoard());
+                out.println("Please select a ship to move by entering a coordinate:");
+                String s = inputReader.readLine();
+                if (s == null) {
+                    throw new EOFException("End of input reached. Exiting the game.");
+                }
+                Coordinate c = new Coordinate(s);
+                out.println("Please enter the new placement:");
+                s = inputReader.readLine();
+                if (s == null) {
+                    throw new EOFException("End of input reached. Exiting the game.");
+                }
+                Placement p = new Placement(s);
+                makeMovement(c, p);
+                --remainMovements;
+                break;
+            } catch (IllegalArgumentException e) {
+                // Handle invalid coordinate format
+                out.println("Invalid coordinate or placement. Please try again.");
+            }
+        }
+    }
+
+    /**
+     * Fire at enemy's board.
+     */
+    public void doFirePhase(TextPlayer enemy) throws IOException {
+        firePhase(enemy, "My Ocean", "Player" + enemy.getName() + "'s Ocean");
+    }
+
+    public void sonarScanPhase(TextPlayer enemy) throws IOException  {
+        while (true) {
+            try {
+                out.print(view.displayEnemyBoard());
+                out.println("Please enter the center coordinate of a sonar scan:");
+                String s = inputReader.readLine();
+                if (s == null) {
+                    throw new EOFException("End of input reached. Exiting the game.");
+                }
+                Coordinate c = new Coordinate(s);
+                enemy.sonarScan(c);
+                --remainSonar;
+                break;
+            } catch (IllegalArgumentException e) {
+                // Handle invalid coordinate format
+                out.println("Invalid coordinate or placement. Please try again.");
+            }
+        }
+    }
+
+    public void makeActionChoice(TextPlayer enemy) throws IOException {
+        label:
+        while (true) {
+            try {
+                out.println("Possible actions for Player " + name + ":\n" +
+                        "\n" +
+                        " F Fire at a square\n" +
+                        " M Move a ship to another square (" + remainMovements + " remaining)\n" +
+                        " S Sonar scan (" + remainSonar + " remaining)\n" +
+                        "\n" +
+                        "Player " + name + ", what would you like to do?\n");
+                String action = inputReader.readLine().toUpperCase();
+                switch (action) {
+                    case "F":
+                        doFirePhase(enemy);
+                        break label;
+                    case "M":
+                        doMovementPhase();
+                        break label;
+                    case "S":
+                        sonarScanPhase(enemy);
+                        break label;
+                    case null:
+                    default:
+                        throw new IllegalArgumentException("Unknown action: " + action);
+                }
+            } catch (IllegalArgumentException e) {
+                out.println("Invalid input: " + e.getMessage() + ". Please try again.");
+            }
         }
     }
 }

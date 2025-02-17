@@ -1,13 +1,16 @@
 package org.battleship;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Basic Ship is a kind of Ship that is implemented by Characters
  */
 public abstract class BasicShip<T> implements Ship<T> {
     //private final Coordinate myLocation;
-    protected HashMap<Coordinate, Boolean> myPieces;
+    //protected LinkedHashMap<Coordinate, Boolean> myPieces;
+    protected LinkedHashMap<Coordinate, Boolean> myPieces;
     protected ShipDisplayInfo<T> myDisplayInfo;
     protected ShipDisplayInfo<T> enemyDisplayInfo;
     /**
@@ -23,12 +26,17 @@ public abstract class BasicShip<T> implements Ship<T> {
      * @param where
      */
     public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
-        myPieces = new HashMap<Coordinate, Boolean>();
+        myPieces = new LinkedHashMap<Coordinate, Boolean>();
         for (Coordinate c : where) {
             myPieces.put(c, false);
         }
         this.myDisplayInfo = myDisplayInfo;
         this.enemyDisplayInfo = enemyDisplayInfo;
+    }
+
+    @Override
+    public LinkedHashMap<Coordinate, Boolean> getMyPieces() {
+        return myPieces;
     }
 
     /**
@@ -67,8 +75,6 @@ public abstract class BasicShip<T> implements Ship<T> {
     @Override
     public T getDisplayInfoAt(Coordinate where, boolean myShip) {
         checkCoordinateInThisShip(where);
-        //TODO this is not right.  We need to
-        //look up the hit status of this coordinate
         return myShip
                 ? myDisplayInfo.getInfo(where, myPieces.get(where))
                 : enemyDisplayInfo.getInfo(where, myPieces.get(where));
@@ -88,5 +94,10 @@ public abstract class BasicShip<T> implements Ship<T> {
     @Override
     public Iterable<Coordinate> getCoordinates() {
         return myPieces.keySet();
+    }
+
+    @Override
+    public void moveShipTo(LinkedHashMap<Coordinate, Boolean> newPieces) {
+        this.myPieces = newPieces;
     }
 }
