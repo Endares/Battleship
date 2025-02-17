@@ -15,10 +15,10 @@ public class MakeNewCoords<T> {
         String name = ship.getName().toLowerCase();
         // rectangle ship
         switch (name) {
-            case "submarine", "destroyer" -> {
+            case "submarine":
+            case "destroyer":
                 return makeRectCoords(ship.getMyPieces(), newPlacement);
-            }
-            case "battleship" -> {
+            case "battleship":
                 // Placement's constructor makes sure right format of Placement
                 if (newPlacement.getOrientation() == 'U') {
                     return makeUpBattle(ship.getMyPieces(), newPlacement);
@@ -30,8 +30,8 @@ public class MakeNewCoords<T> {
                     return makeLeftBattle(ship.getMyPieces(), newPlacement);
                 }
                 // Placement's constructor makes sure right format of Placement
-            }
-            case "carrier" -> {
+
+            case "carrier":
                 if (newPlacement.getOrientation() == 'U') {
                     return makeUpCarrier(ship.getMyPieces(), newPlacement);
                 } else if (newPlacement.getOrientation() == 'R') {
@@ -41,8 +41,9 @@ public class MakeNewCoords<T> {
                 } else {
                     return makeLeftCarrier(ship.getMyPieces(), newPlacement);
                 }
-            }
-            default -> throw new IllegalArgumentException("Undefined ship kind: " + name);
+
+            default:
+                throw new IllegalArgumentException("Undefined ship kind: " + name);
         }
     }
 

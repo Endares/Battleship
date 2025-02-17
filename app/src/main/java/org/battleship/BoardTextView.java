@@ -122,6 +122,7 @@ public class BoardTextView {
         // Passes a lambda function (c) -> toDisplay.whatIsAtForSelf(c) to displayAnyBoard().
     }
 
+    // display my board to enemy, not displaying enemy's board
     public String displayEnemyBoard() {
         return displayAnyBoard((c)->toDisplay.whatIsAtForEnemy(c));
     }

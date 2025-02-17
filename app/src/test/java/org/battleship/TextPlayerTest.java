@@ -246,12 +246,10 @@ class TextPlayerTest {
         testPlayer.sonarScan(center);
         String output = outputStream.toString();
 
-        String expected = """
-            Submarines occupy 2 squares
-            Destroyers occupy 3 squares
-            Battleships occupy 4 squares
-            Carriers occupy 3 squares
-            """;
+        String expected = "Submarines occupy 2 squares\n" +
+                "Destroyers occupy 3 squares\n" +
+                "Battleships occupy 4 squares\n" +
+                "Carriers occupy 3 squares\n";
 
         assertEquals(expected.trim(), output.trim());
     }

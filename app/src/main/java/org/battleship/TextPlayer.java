@@ -148,8 +148,8 @@ public class TextPlayer {
     }
 
     public void firePhase(TextPlayer enemy, String myHeader, String enemyHeader) throws IOException {
-        out.println("Player" + name + "'s turn:");
-        out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
+        // out.println("Player" + name + "'s turn:");
+        // out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
         readAndFire(enemy, "Player" + name + ", where do you want to fire at?");
         out.println(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
     }
@@ -283,7 +283,8 @@ public class TextPlayer {
     public void sonarScanPhase(TextPlayer enemy) throws IOException  {
         while (true) {
             try {
-                out.print(view.displayEnemyBoard());
+                out.println("Displaying player " + enemy.name + "'s Ocean:");
+                out.print(enemy.view.displayEnemyBoard());
                 out.println("Please enter the center coordinate of a sonar scan:");
                 String s = inputReader.readLine();
                 if (s == null) {
@@ -301,6 +302,10 @@ public class TextPlayer {
     }
 
     public void makeActionChoice(TextPlayer enemy) throws IOException {
+        out.println("Player" + name + "'s turn:");
+        String myHeader = "My Ocean";
+        String enemyHeader = "Player" + enemy.getName() + "'s Ocean";
+        out.print(view.displayMyBoardWithEnemyNextToIt(enemy.view, myHeader, enemyHeader));
         label:
         while (true) {
             try {
@@ -317,9 +322,15 @@ public class TextPlayer {
                         doFirePhase(enemy);
                         break label;
                     case "M":
+                        if (remainMovements <= 0) {
+                            throw new IllegalStateException("No remaining movements available!");
+                        }
                         doMovementPhase();
                         break label;
                     case "S":
+                        if (remainSonar <= 0) {
+                            throw new IllegalStateException("No remaining sonar scans available!");
+                        }
                         sonarScanPhase(enemy);
                         break label;
                     case null:
@@ -328,6 +339,8 @@ public class TextPlayer {
                 }
             } catch (IllegalArgumentException e) {
                 out.println("Invalid input: " + e.getMessage() + ". Please try again.");
+            } catch (IllegalStateException e) {
+                out.println("Invalid action: " + e.getMessage() + ". Please try again.");
             }
         }
     }
