@@ -63,8 +63,14 @@ public class ComputerTextPlayer extends TextPlayer {
     }
 
     public void randomFire(TextPlayer enemy) throws IOException {
+        Coordinate c = getRandomCoordinate();
         // fire at enemy's board
-        enemy.theBoard.fireAt(getRandomCoordinate());
+        Ship<Character> ship = enemy.theBoard.fireAt(c);
+        if (ship != null) {
+            out.println("Player " + name + " hit your " + ship.getName() + " at " + c);
+        } else {
+            out.println("Player " + name + " missed.");
+        }
     }
 
     /**
@@ -133,7 +139,6 @@ public class ComputerTextPlayer extends TextPlayer {
                 }
             }
         }
-        //throw new IOException("No where to move any ship");
     }
 
 
