@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 
+/**
+ * Computer's auto action
+ */
 public class ComputerTextPlayer extends TextPlayer {
     public ComputerTextPlayer(String name, Board<Character> theBoard, BufferedReader inputReader, PrintStream out, AbstractShipFactory<Character> shipFactory) {
         super(name, theBoard, inputReader, out, shipFactory);
